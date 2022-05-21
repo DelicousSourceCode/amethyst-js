@@ -1,0 +1,28 @@
+{
+  "name": "amethyst",
+  "description": "<p align=\"center\">   <img src=\"./logo.svg\" alt=\"logo.svg\" /> </p>",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DelicousSourceCode/amethyst-js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DelicousSourceCode/amethyst-js/issues"
+  },
+  "homepage": "https://github.com/DelicousSourceCode/amethyst-js#readme",
+  "dependencies": {
+    "undici": "^5.2.0",
+    "ws": "^8.6.0"
+  },
+  "devDependencies": {}
+}
