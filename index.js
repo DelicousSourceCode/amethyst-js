@@ -3,7 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const http = require('http')
 const https = require('https')
-const { RequestBodyObject, OptionsObject } = require('./lib/params')
+const { Request, Response, RequestBodyObject, OptionsObject } = require('./lib/params')
 
 class Server {
   /**
@@ -16,18 +16,20 @@ class Server {
   constructor(options) {
     this.#options = options
     this.#port = options.port
-    this.req
-    this.res
+    this.#req
+    this.#res
     this.#routers = []
     this.#server = http.createServer((req, res) => {
-      this.req = req
-      this.res = res
+      this.#req = req
+      this.#res = res
       // this.#routers.forEach(router => {
       //   if (req.url == router) {
 
       //   }
       // })
     })
+    this.req = new Request(this.#req)
+    this.res = new Response(this.#res)
     this.#server.listen(this.#port, err => {
       if (err) throw err
     })
@@ -52,49 +54,6 @@ class Server {
       path: uri,
       method: 'GET'
     })
-    const req = {
-      statusCode: this.req.statusCode,
-      statusText: this.req.statusMessage,
-      url
-    }
-    const res = {
-      statusCode: this.res.statusCode,
-      statusText: this.res.statusMessage,
-      /**
-       * Creates a DOM node; this can be an element, some text, or some whitespace
-       * @param {string} data
-       * @param {(err: Error) => void} onerror
-       */
-      createNode: (data, onerror) => this.res.write(data, onerror),
-      /**
-       * Creates metadata for the server (e. g. ```Content-type```)
-       * @param {string} data
-       * @param {(err: Error) => void} onerror
-       */
-      createMetadata: (data, onerror) => this.res.writeHead(data, onerror),
-      /**
-       * Includes view data from a file
-       * @param {string} dirname 
-       */
-      useFile: dirname => {
-        const dir = path.join(
-          __dirname, this.#options.root == undefined
-          ? 'src'
-          : this.#options.root, dirname
-        )
-        this.res.writeHead(200, 'OK', { 'Content-type': 'text/html' })
-        fs.readFile(dir, (err, data) => {
-          if (err) {
-            this.res.writeHead(404, 'File not found', { 'Content-type': 'text/html' })
-            this.res.write('<p style="color: red; font-family: monospace;">Error: file not found</p>')
-          } else {
-            this.res.write(data)
-          }
-          this.res.end()
-        })
-      }
-    }
-    return req, res
   }
 }
 
@@ -103,4 +62,4 @@ module.exports = {
 }
 
 const server = new Server({ port: 3000 })
-server.GET('/').useFile('index.html')
+server.GET('/')
